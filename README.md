@@ -2,25 +2,25 @@
 
 ## 运行demo:  
 `source activate meihuazhuan`  
-`cd /root/meihuazhuang/django/DjangoBlog`
+`cd /root/meihuazhuang/django/DjangoBlog`  
 `python manage.py runserver  0.0.0.0:8000`  
 浏览器打开: http://123.207.166.127:8000/ 就可以看到效果了
 ## 环境布置：  
-centos7+Apache+mysql+Django+python3  
-python环境布置
-Anconda—linux安装
-Conda  create meihuazhuan
-Source activate meihuazhuan
-mysql布置
-下载mysql的repo源并安装
-#rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-2、修改安装的Mysql版本
-(1)List item
-查看repo源可安装版本
-#yum repolist all | grep mysql
-之后会显示可安装的版本列表，默认安装版本为5.7
-(2)修改默认版本
-# vi /etc/yum.repos.d/mysql-community.repo
+`centos7+Apache+mysql+Django+python3  `
+### python环境布置
+#### Anconda—linux安装
+`Conda  create meihuazhuan`  
+`Source activate meihuazhuan`
+### mysql布置
+#### 下载mysql的repo源并安装  
+`rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm`
+#### 修改安装的Mysql版本
+(1) `List item`  
+查看repo源可安装版本  
+`yum repolist all | grep mysql`  
+之后会显示可安装的版本列表，默认安装版本为5.7  
+(2)修改默认版本  
+`vi /etc/yum.repos.d/mysql-community.repo`  
 打开repo文件，将其中的5.7版本的enabled=1改为enabled=0以及8.0版本的enabled=0改为enabled=1，结果如下
 [mysql57-community]
 name=MySQL 5.7 Community Server
