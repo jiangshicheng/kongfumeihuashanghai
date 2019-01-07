@@ -1,99 +1,120 @@
-# DjangoBlog
+上海梅花桩web项目
+运行demo：
+source activate meihuazhuan
+cd /root/meihuazhuang/django/DjangoBlog
+python manage.py runserver  0.0.0.0:8000
+浏览器打开: http://123.207.166.127:8000/ 就可以看到效果了
+代码链接：
+环境布置：
+centos7+Apache+mysql+Django+python3
+python环境布置
+Anconda—linux安装
+Conda  create meihuazhuan
+Source activate meihuazhuan
+mysql布置
+下载mysql的repo源并安装
+#rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+2、修改安装的Mysql版本
+(1)List item
+查看repo源可安装版本
+#yum repolist all | grep mysql
+之后会显示可安装的版本列表，默认安装版本为5.7
+(2)修改默认版本
+# vi /etc/yum.repos.d/mysql-community.repo
+打开repo文件，将其中的5.7版本的enabled=1改为enabled=0以及8.0版本的enabled=0改为enabled=1，结果如下
+[mysql57-community]
+name=MySQL 5.7 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
 
-基于`python3.6`和`Django2.1`的博客。   
+[mysql80-community]
+name=MySQL 8.0 Community Server
+baseurl=http://repo.mysql.com/yum/mysql-8.0-community/el/7/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+(3)查看可使用版本
+yum repolist enabled | grep mysql
+3、安装MySQL
+#yum install -y mysql-community-server
+## 注意，此过程很漫长，需要良好网络
+4、启动MySQL并设置开机启动
+# 启动
+# systemctl start mysqld
 
-[![Build Status](https://travis-ci.org/liangliangyy/DjangoBlog.svg?branch=master)](https://travis-ci.org/liangliangyy/DjangoBlog) [![codecov](https://codecov.io/gh/liangliangyy/DjangoBlog/branch/master/graph/badge.svg)](https://codecov.io/gh/liangliangyy/DjangoBlog) [![Requirements Status](https://requires.io/github/liangliangyy/DjangoBlog/requirements.svg?branch=master)](https://requires.io/github/liangliangyy/DjangoBlog/requirements/?branch=master)  [![license](https://img.shields.io/github/license/liangliangyy/djangoblog.svg)]() [![GitHub release](https://img.shields.io/github/release/liangliangyy/djangoblog.svg)]() [![python3.5](https://img.shields.io/badge/python-3.5-brightgreen.svg)]() [![django1.10](https://img.shields.io/badge/django-2.0-brightgreen.svg)]()     
+# 开机启动
+# systemctl enable mysqld
+# systemctl daemon-reload
+5、生成初始密码
+#grep 'temporary password' /var/log/mysqld.log 
+6、登录MySQL并修改初始密码
 
-## 主要功能：
-- 文章，页面，分类目录，标签的添加，删除，编辑等。文章及页面支持`Markdown`，支持代码高亮。
-- 支持文章全文搜索。
-- 完整的评论功能，包括发表回复评论，以及评论的邮件提醒，支持`Markdown`。
-- 侧边栏功能，最新文章，最多阅读，标签云等。
-- 支持Oauth登陆，现已有Google,GitHub,facebook,微博,QQ登录。
-- 支持`Memcache`缓存，支持缓存自动刷新。
-- 简单的SEO功能，新建文章等会自动通知Google和百度。
-- 集成了简单的图床功能。
-- 集成`django-compressor`，自动压缩`css`，`js`。
-- 网站异常邮件提醒，若有未捕捉到的异常会自动发送提醒邮件。
-- 集成了微信公众号功能，现在可以使用微信公众号来管理你的vps了。
-## 安装
-使用pip安装：  
-`pip install -Ur requirements.txt`
+## 登录MySQL
+mysql -uroot -p  初始密码
 
-如果你没有pip，使用如下方式安装：    
-OS X / Linux 电脑，终端下执行:  
+## 修改初始密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Meihua@123456';
+#  密码强度默认为中等强度，需要由大写字母、小写字母、特殊符号、数字组成
 
-    curl http://peak.telecommunity.com/dist/ez_setup.py | python
-    curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+# 可以先修改密码强度再修改密码
+set global validate_password_length=4; (最小值是4，默认为8)
+set global validate_password_policy=0
+# 选择0（LOW），1（MEDIUM），2（STRONG）其中一种，选择2需要提供密码字典文件
+# 之后修改密码便可以使用简单密码
+Django安装
+开启 virtualenv python3 环境
+# source activate meihuazhuan
+在此环境安装 Django 相关模块
+注意：使用pip安装的内容都需要在虚拟环境下安装，否则将默认安装在CentOS自带的Python2相关环境中
+## 安装pymysql库
+# pip install django pymysql
+安装python相关包需要用到python中的pip命令，比如我项目中需要的包有:
 
-windows电脑：  
- 下载 http://peak.telecommunity.com/dist/ez_setup.py 和 https://raw.github.com/pypa/pip/master/contrib/get-pip.py 这两个文件，双击运行。  
+pip install Django
+pip install PyMySQL
+pip install Scrapy
+pip install beautifulsoup4
+pip install bs4
+pip install lxml
+pip install numpy
+pip install requests
+pip install simplejson
+pip install urllib3
+Apache布置
+1、安装 apache package
+# yum install httpd httpd-devel -y
+2、安装 mod_wsgi for python3
+# pip install mod_wsgi 
+注意：这里需要在配置的虚拟环境中安装，不要在外部使用yum install mod_wsgi安装，这将会使mod_wsgi模块默认安装在CentOS7自带的Python2中
+3、导出 apache 所需的 mod_wsgi 模块
 
-### 配置
-配置都是在`setting.py`中.部分配置迁移到了后台配置中。
+# mod_wsgi-express install-module
 
-很多`setting`配置我都是写在环境变量里面的.并没有提交到`github`中来.例如`SECRET_KEY`,`OAHUTH`,`mysql`以及邮件部分的配置等.你可以直接修改代码成你自己的,或者在环境变量里面加入对应的配置就可以了.
+## 结果（根据虚拟目录名称不同，这里结果也略有不同，但大致相同）
+## LoadModule wsgi_module "/usr/lib64/httpd/modules/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so"
+## WSGIPythonHome "/var/www/html/.py3env"
+4、配置 apache 配置文件
+# vi /etc/httpd/conf/httpd.conf
+在最后添加
+LoadModule wsgi_module "/usr/lib64/httpd/modules/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so"
+5 创建相应的Django配置文件
+# vi /etc/httpd/conf.d/django.conf
+6、重启 apache 并设置开机自启动
+# systemctl restart httpd
 
-`test`目录中的文件都是为了`travis`自动化测试使用的.不用去关注.或者直接使用.这样就可以集成`travis`自动化测试了.
+# systemctl enable httpd
 
-`bin`目录是在`linux`环境中使用`Nginx`+`Gunicorn`+`virtualenv`+`supervisor`来部署的脚本和`Nginx`配置文件.可以参考我的文章:
+Demo项目：
+Cd ~/meihuazhuang
+Git clone https://github.com/liangliangyy/DjangoBlog.git
+进入到工程中
+sudo su root
+cd project/django-restframework-demo/tutorial
+python manage.py runserver 0.0.0.0:80 &
 
->[使用Nginx+Gunicorn+virtualenv+supervisor来部署django项目](https://www.lylinux.org/%E4%BD%BF%E7%94%A8nginxgunicornvirtualenvsupervisor%E6%9D%A5%E9%83%A8%E7%BD%B2django%E9%A1%B9%E7%9B%AE.html)
-
-有详细的部署介绍.
-
-
-## 运行
-
- 修改`DjangoBlog/setting.py` 修改数据库配置，如下所示：
-
-     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'djangoblog',
-            'USER': 'root',
-            'PASSWORD': 'password',
-            'HOST': 'host',
-            'PORT': 3306,
-        }
-    }
-
-### 创建数据库
-mysql数据库中执行:
-```sql
-CREATE DATABASE `djangoblog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-```
- 然后终端下执行:
-
-    ./manage.py makemigrations
-    ./manage.py migrate
-### 创建超级用户
-
- 终端下执行:
-
-    ./manage.py createsuperuser
-### 创建测试数据
-终端下执行:
-
-    ./manage.py create_testdata
-### 收集静态文件
-终端下执行:  
-
-    ./manage.py collectstatic --noinput
-    ./manage.py compress --force
-### 开始运行：
- 执行：
- `./manage.py runserver`
-
-
-
-
-
- 浏览器打开: http://127.0.0.1:8000/  就可以看到效果了。
-## 更多配置:
-[更多配置介绍](/bin/config.md)
- ## 问题相关
-
- 有任何问题欢迎提Issue,或者将问题描述发送至我邮箱 `liangliangyy#gmail.com`.我会尽快解答.推荐提交Issue方式.
-
-
+参考：
+https://blog.csdn.net/w18211679321/article/details/83004286
+https://blog.csdn.net/a394268045/article/details/79288718
+https://github.com/liangliangyy/DjangoBlog
