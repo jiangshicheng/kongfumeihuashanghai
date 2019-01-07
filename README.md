@@ -1,5 +1,6 @@
-上海梅花桩web项目
-运行demo：
+# 上海梅花桩web项目
+
+运行demo：  
 source activate meihuazhuan
 cd /root/meihuazhuang/django/DjangoBlog
 python manage.py runserver  0.0.0.0:8000
