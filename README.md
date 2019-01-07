@@ -1,13 +1,12 @@
 # 上海梅花桩web项目
 
-运行demo：  
-source activate meihuazhuan
-cd /root/meihuazhuang/django/DjangoBlog
-python manage.py runserver  0.0.0.0:8000
+## 运行demo:  
+`source activate meihuazhuan`  
+`cd /root/meihuazhuang/django/DjangoBlog`
+`python manage.py runserver  0.0.0.0:8000`  
 浏览器打开: http://123.207.166.127:8000/ 就可以看到效果了
-代码链接：
-环境布置：
-centos7+Apache+mysql+Django+python3
+## 环境布置：  
+centos7+Apache+mysql+Django+python3  
 python环境布置
 Anconda—linux安装
 Conda  create meihuazhuan
